@@ -1,0 +1,77 @@
+{
+  "name": "classic-minesweeper",
+  "productName": "Classic Minesweeper",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Windows 7 Classic Minesweeper — Vite + vanilla ES modules web build with an Electron desktop target",
+  "type": "module",
+  "main": "electron/main.cjs",
+  "license": "MIT",
+  "author": "Classic Minesweeper contributors",
+  "engines": {
+    "node": ">=20.19"
+  },
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview --port 4173 --strictPort",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "test:e2e": "playwright test",
+    "assets": "node scripts/generate-sounds.mjs && node scripts/generate-icons.mjs",
+    "electron:dev": "node scripts/electron-dev.mjs",
+    "electron:start": "npm run build && electron .",
+    "electron:pack": "npm run build && electron-builder --win portable",
+    "electron:dist": "npm run build && electron-builder --win nsis portable"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.64.0",
+    "@vitest/coverage-v8": "^5.0.3",
+    "electron": "^44.7.0",
+    "electron-builder": "^26.15.3",
+    "jsdom": "^30.1.2",
+    "vite": "^8.3.4",
+    "vitest": "^5.0.3"
+  },
+  "build": {
+    "appId": "com.kun.classicminesweeper",
+    "productName": "Classic Minesweeper",
+    "directories": {
+      "output": "release",
+      "buildResources": "build"
+    },
+    "files": [
+      "dist/**/*",
+      "electron/**/*",
+      "package.json"
+    ],
+    "asar": true,
+    "win": {
+      "icon": "build/icon.ico",
+      "target": [
+        {
+          "target": "portable",
+          "arch": [
+            "x64"
+          ]
+        },
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        }
+      ]
+    },
+    "portable": {
+      "artifactName": "ClassicMinesweeper-${version}-portable.exe"
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": true,
+      "artifactName": "ClassicMinesweeper-${version}-setup.exe"
+    }
+  }
+}

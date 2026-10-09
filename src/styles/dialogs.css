@@ -1,0 +1,369 @@
+/* ==========================================================================
+   dialogs.css — 模态对话框、自定义难度表单、成绩/成就面板、提示浮层
+   ========================================================================== */
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: rgba(12, 32, 52, 0.34);
+  backdrop-filter: blur(1px);
+}
+
+.overlay[hidden] {
+  display: none;
+}
+
+.dialog {
+  width: min(460px, 100%);
+  max-height: calc(100vh - 48px);
+  /* 跟随界面缩放，避免窗口放大后对话框显得过小 */
+  zoom: var(--ui-scale);
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--aero-border);
+  border-radius: var(--radius-window);
+  background: var(--surface);
+  box-shadow: var(--shadow-window);
+  overflow: hidden;
+  animation: dialog-in var(--transition-mid) both;
+}
+
+.dialog--wide {
+  width: min(560px, 100%);
+}
+
+@keyframes dialog-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.99);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.dialog__titlebar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 30px;
+  padding: 0 4px 0 10px;
+  background: linear-gradient(180deg, var(--aero-1) 0%, var(--aero-2) 42%, var(--aero-3) 62%, var(--aero-4) 100%);
+  border-bottom: 1px solid var(--aero-border-dark);
+}
+
+.dialog__title {
+  font-weight: 600;
+  color: var(--aero-title);
+  text-shadow: 0 0 3px rgba(255, 255, 255, 0.95);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.dialog__close {
+  margin-left: auto;
+  width: 32px;
+  height: 22px;
+  border: 1px solid rgba(255, 255, 255, 0.75);
+  border-radius: 2px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.8), rgba(206, 224, 240, 0.85));
+  position: relative;
+}
+
+.dialog__close:hover {
+  border-color: #e59a92;
+  background: linear-gradient(180deg, #f5b6ae 0%, #e4584a 46%, #c02c1c 100%);
+}
+
+.dialog__close::before,
+.dialog__close::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 10px;
+  height: 1.6px;
+  background: #1a3c5c;
+}
+
+.dialog__close:hover::before,
+.dialog__close:hover::after {
+  background: #fff;
+}
+
+.dialog__close::before {
+  transform: translate(-50%, -50%) rotate(45deg);
+}
+
+.dialog__close::after {
+  transform: translate(-50%, -50%) rotate(-45deg);
+}
+
+.dialog__body {
+  padding: 14px 16px;
+  overflow: auto;
+  line-height: 1.6;
+}
+
+.dialog__footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  padding: 10px 16px 14px;
+  border-top: 1px solid #e2e2e2;
+  background: var(--surface-alt);
+}
+
+.dialog__hint {
+  color: #5c5c5c;
+  font-size: 11px;
+}
+
+.dialog h3 {
+  margin: 14px 0 6px;
+  font-size: 13px;
+  color: #17456b;
+}
+
+.dialog h3:first-child {
+  margin-top: 0;
+}
+
+.dialog ul,
+.dialog ol {
+  margin: 6px 0;
+  padding-left: 20px;
+}
+
+.dialog li {
+  margin: 3px 0;
+}
+
+.dialog kbd {
+  display: inline-block;
+  min-width: 16px;
+  padding: 1px 5px;
+  border: 1px solid #b8b8b8;
+  border-bottom-width: 2px;
+  border-radius: 3px;
+  background: #fbfbfb;
+  font-family: var(--font-ui);
+  font-size: 11px;
+  text-align: center;
+}
+
+/* ---- 表单（自定义难度） ---- */
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 10px 12px;
+  align-items: center;
+}
+
+.form-grid label {
+  color: #17364f;
+}
+
+.form-grid input[type='number'] {
+  width: 96px;
+  padding: 4px 6px;
+  border: 1px solid #a9b7c4;
+  border-radius: 2px;
+  background: #fff;
+}
+
+.form-grid input[type='number']:focus {
+  border-color: #3c9be0;
+  box-shadow: 0 0 0 2px rgba(60, 155, 224, 0.2);
+  outline: none;
+}
+
+.form-grid input[aria-invalid='true'] {
+  border-color: #d21f1f;
+  background: #fff6f6;
+}
+
+.field-error {
+  grid-column: 1 / -1;
+  margin: -4px 0 2px;
+  color: #c01818;
+  font-size: 11px;
+  min-height: 14px;
+}
+
+/* ---- 最佳成绩 / 成就列表 ---- */
+.record-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 4px 0 10px;
+}
+
+.record-table th,
+.record-table td {
+  padding: 5px 8px;
+  border-bottom: 1px solid #e2e2e2;
+  text-align: left;
+}
+
+.record-table th {
+  background: #eef4fa;
+  color: #1c4a70;
+  font-weight: 600;
+}
+
+.record-table td.is-best {
+  color: #b8860b;
+  font-weight: 600;
+}
+
+.achievement-list {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.achievement {
+  display: grid;
+  grid-template-columns: 26px 1fr auto;
+  gap: 10px;
+  align-items: center;
+  padding: 8px 10px;
+  border: 1px solid #dbe4ec;
+  border-radius: 4px;
+  background: #fbfdff;
+}
+
+.achievement--locked {
+  opacity: 0.62;
+  background: #f4f4f4;
+  border-color: #e0e0e0;
+}
+
+.achievement__icon {
+  width: 22px;
+  height: 22px;
+  background: url('../assets/icons/trophy.svg') center / 22px 22px no-repeat;
+  filter: grayscale(1);
+  opacity: 0.5;
+}
+
+.achievement--unlocked .achievement__icon {
+  filter: none;
+  opacity: 1;
+}
+
+.achievement__name {
+  font-weight: 600;
+  color: #17364f;
+}
+
+.achievement__desc {
+  color: #55697a;
+  font-size: 11px;
+}
+
+.achievement__state {
+  font-size: 11px;
+  color: #7b7b7b;
+  white-space: nowrap;
+}
+
+.achievement--unlocked .achievement__state {
+  color: #1a7f37;
+  font-weight: 600;
+}
+
+.progress-summary {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 16px;
+  margin: 0 0 10px;
+  padding: 8px 10px;
+  border-radius: 4px;
+  background: #eef4fa;
+  color: #1c4a70;
+}
+
+/* ---- 提示浮层（成就解锁 / 一般提示） ---- */
+.toasts {
+  position: fixed;
+  right: 18px;
+  bottom: 18px;
+  z-index: 200;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: flex-end;
+  pointer-events: none;
+}
+
+.toast {
+  /* 与窗口使用同一缩放比例 */
+  zoom: var(--ui-scale);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 220px;
+  max-width: 320px;
+  padding: 9px 12px;
+  border: 1px solid var(--aero-border);
+  border-radius: 5px;
+  background: linear-gradient(180deg, #ffffff 0%, #eef5fc 100%);
+  box-shadow: 0 6px 18px rgba(6, 26, 48, 0.3);
+  animation: toast-in 180ms ease-out both;
+}
+
+.toast--leaving {
+  animation: toast-out 160ms ease-in both;
+}
+
+.toast__icon {
+  width: 22px;
+  height: 22px;
+  flex: 0 0 auto;
+  background: url('../assets/icons/trophy.svg') center / 22px 22px no-repeat;
+}
+
+.toast--info .toast__icon {
+  background: url('../assets/icons/mine.svg') center / 18px 18px no-repeat;
+}
+
+.toast__title {
+  font-weight: 600;
+  color: #143f63;
+}
+
+.toast__text {
+  font-size: 11px;
+  color: #4b6070;
+}
+
+@keyframes toast-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes toast-out {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+}

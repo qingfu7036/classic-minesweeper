@@ -1,0 +1,136 @@
+/* ==========================================================================
+   controls.css — 控制区：LED 计数器、笑脸按钮
+   ========================================================================== */
+
+.panel {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  /* 与雷区外框同宽同边距：两者左右边界严格对齐，不会出现横向空隙 */
+  width: calc(var(--cols, 9) * var(--cell) + var(--frame-pad) * 2);
+  margin: var(--client-gap) auto;
+  padding: 4px 6px;
+  background: var(--client);
+  box-shadow: inset 2px 2px 0 var(--bevel-lo), inset -2px -2px 0 var(--bevel-hi);
+}
+
+/* ---- LED 计数器 ---- */
+.led {
+  display: flex;
+  align-items: center;
+  gap: 1px;
+  padding: 2px;
+  background: var(--led-bg);
+  box-shadow: inset 1px 1px 0 #808080, inset -1px -1px 0 #ffffff;
+}
+
+.led-digit {
+  position: relative;
+  width: var(--led-w);
+  height: var(--led-h);
+  flex: 0 0 auto;
+}
+
+.led-digit .seg {
+  position: absolute;
+  background: var(--led-off);
+  border-radius: 1px;
+  transition: background var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.led-digit .seg.on {
+  background: var(--led-on);
+  box-shadow: 0 0 3px rgba(255, 70, 0, 0.85);
+}
+
+/* 七段：a 上、b 右上、c 右下、d 下、e 左下、f 左上、g 中 */
+.led-digit .s-a,
+.led-digit .s-g,
+.led-digit .s-d {
+  left: calc(var(--led-t) * 0.9);
+  width: calc(var(--led-w) - var(--led-t) * 1.8);
+  height: var(--led-t);
+}
+
+.led-digit .s-a {
+  top: 0;
+}
+
+.led-digit .s-g {
+  top: calc((var(--led-h) - var(--led-t)) / 2);
+}
+
+.led-digit .s-d {
+  bottom: 0;
+}
+
+.led-digit .s-f,
+.led-digit .s-b,
+.led-digit .s-e,
+.led-digit .s-c {
+  width: var(--led-t);
+  height: calc((var(--led-h) - var(--led-t) * 3) / 2 + var(--led-t) * 0.5);
+}
+
+.led-digit .s-f,
+.led-digit .s-e {
+  left: 0;
+}
+
+.led-digit .s-b,
+.led-digit .s-c {
+  right: 0;
+}
+
+.led-digit .s-f,
+.led-digit .s-b {
+  top: calc(var(--led-t) * 0.6);
+}
+
+.led-digit .s-e,
+.led-digit .s-c {
+  bottom: calc(var(--led-t) * 0.6);
+}
+
+/* ---- 笑脸按钮 ---- */
+.facebtn {
+  width: 26px;
+  height: 26px;
+  padding: 0;
+  border: none;
+  background-color: var(--client);
+  box-shadow: inset 2px 2px 0 var(--bevel-hi), inset -2px -2px 0 var(--bevel-lo),
+    2px 2px 0 rgba(0, 0, 0, 0.18);
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 22px 22px;
+  background-image: url('../assets/icons/face-smile.svg');
+  transition: none;
+}
+
+.facebtn:hover {
+  background-color: #cccccc;
+}
+
+.facebtn[data-face='smile'] {
+  background-image: url('../assets/icons/face-smile.svg');
+}
+
+.facebtn[data-face='oh'] {
+  background-image: url('../assets/icons/face-oh.svg');
+}
+
+.facebtn[data-face='dead'] {
+  background-image: url('../assets/icons/face-dead.svg');
+}
+
+.facebtn[data-face='win'] {
+  background-image: url('../assets/icons/face-win.svg');
+}
+
+.facebtn:active,
+.facebtn[data-pressed='true'] {
+  box-shadow: inset 2px 2px 0 var(--bevel-lo), inset -2px -2px 0 var(--bevel-hi);
+  transform: translateY(1px);
+}

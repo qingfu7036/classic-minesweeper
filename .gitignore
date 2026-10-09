@@ -1,0 +1,23 @@
+# 依赖与构建产物
+node_modules/
+dist/
+release/
+coverage/
+
+# 本仓库只包含项目本体，以下为运行/调试产生的临时内容
+cache/
+test-results/
+playwright-report/
+playwright-results/
+*.log
+npm-debug.log*
+
+# 与本项目无关的工作区内容
+.kun-design/
+
+# 编辑器 / 系统
+.DS_Store
+Thumbs.db
+*.local
+.vscode/
+.idea/

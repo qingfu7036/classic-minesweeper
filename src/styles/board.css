@@ -1,0 +1,125 @@
+/* ==========================================================================
+   board.css — 雷区：经典凸起/凹陷格子、数字、地雷、旗帜
+   ========================================================================== */
+
+/* 雷区外框：宽度与控制区完全一致并居中，窗口被拉宽时不会出现大片空白 */
+.board-frame {
+  width: calc(var(--cols, 9) * var(--cell) + var(--frame-pad) * 2);
+  margin: 0 auto var(--client-gap);
+  padding: var(--frame-pad);
+  background: var(--client);
+  box-shadow: inset 2px 2px 0 var(--bevel-lo), inset -2px -2px 0 var(--bevel-hi);
+}
+
+.board {
+  display: grid;
+  grid-template-columns: repeat(var(--cols, 9), var(--cell));
+  grid-auto-rows: var(--cell);
+  background: var(--client);
+  /* 避免拖动选择文本影响手感 */
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+}
+
+.cell {
+  position: relative;
+  width: var(--cell);
+  height: var(--cell);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--client);
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: var(--cell) var(--cell);
+  font-family: var(--font-board);
+  font-weight: 700;
+  font-size: calc(var(--cell) * 0.7);
+  line-height: 1;
+  color: #000;
+  cursor: default;
+}
+
+/* 未打开：经典凸起 */
+.cell--closed {
+  box-shadow: inset 2px 2px 0 var(--bevel-hi), inset -2px -2px 0 var(--bevel-lo);
+}
+
+.cell--closed:hover {
+  background-color: #cbcbcb;
+}
+
+/* 已打开：凹陷 */
+.cell--open {
+  box-shadow: inset 1px 1px 0 var(--bevel-lo);
+}
+
+/* 按住预览 / 快速开格预览：与打开一致的凹陷，内容仍隐藏 */
+.cell--pressed {
+  box-shadow: inset 1px 1px 0 var(--bevel-lo);
+}
+
+/* 键盘光标 */
+.cell--cursor {
+  outline: 2px solid #0a5ea8;
+  outline-offset: -2px;
+  z-index: 2;
+}
+
+.board:focus-visible {
+  outline: none;
+}
+
+/* ---- 内容图标（全部为本地 SVG，不依赖系统 Emoji/字体） ---- */
+.cell--flag {
+  background-image: url('../assets/icons/flag.svg');
+}
+
+.cell--question {
+  background-image: url('../assets/icons/question.svg');
+}
+
+.cell--mine {
+  background-image: url('../assets/icons/mine.svg');
+}
+
+.cell--wrong {
+  background-image: url('../assets/icons/mine-wrong.svg');
+}
+
+.cell--exploded {
+  background-color: #ff0000;
+  background-image: url('../assets/icons/mine.svg');
+}
+
+/* ---- 经典数字配色 ---- */
+.cell[data-n='1'] {
+  color: var(--num-1);
+}
+.cell[data-n='2'] {
+  color: var(--num-2);
+}
+.cell[data-n='3'] {
+  color: var(--num-3);
+}
+.cell[data-n='4'] {
+  color: var(--num-4);
+}
+.cell[data-n='5'] {
+  color: var(--num-5);
+}
+.cell[data-n='6'] {
+  color: var(--num-6);
+}
+.cell[data-n='7'] {
+  color: var(--num-7);
+}
+.cell[data-n='8'] {
+  color: var(--num-8);
+}
+
+/* 结束状态：棋盘不再响应指针 */
+.board--locked .cell {
+  cursor: default;
+}

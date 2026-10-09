@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="light" />
+    <title>扫雷 — Windows 7 Classic Minesweeper</title>
+    <link rel="icon" href="./assets/icons/mine.svg" type="image/svg+xml" />
+  </head>
+  <body>
+    <div class="desktop" id="desktop">
+      <div class="aero-window" id="gameWindow" role="application" aria-label="扫雷">
+        <div class="titlebar" id="titlebar">
+          <div class="titlebar__left">
+            <span class="titlebar__icon" aria-hidden="true"></span>
+            <span class="titlebar__title" id="windowTitle">扫雷</span>
+          </div>
+          <div class="titlebar__buttons">
+            <button type="button" class="sysbtn sysbtn--min" id="btnMinimize" title="最小化" aria-label="最小化">
+              <span class="sysbtn__glyph" aria-hidden="true"></span>
+            </button>
+            <button type="button" class="sysbtn sysbtn--max" id="btnMaximize" title="最大化" aria-label="最大化">
+              <span class="sysbtn__glyph" aria-hidden="true"></span>
+            </button>
+            <button type="button" class="sysbtn sysbtn--close" id="btnClose" title="关闭" aria-label="关闭">
+              <span class="sysbtn__glyph" aria-hidden="true"></span>
+            </button>
+          </div>
+        </div>
+
+        <div class="menubar" id="menubar" role="menubar" aria-label="主菜单"></div>
+
+        <div class="client">
+          <div class="panel">
+            <div class="counter counter--mines" id="mineCounter" role="img" aria-label="剩余地雷"></div>
+            <button type="button" class="facebtn" id="faceButton" data-face="smile" title="新游戏" aria-label="新游戏"></button>
+            <div class="counter counter--time" id="timeCounter" role="img" aria-label="计时"></div>
+          </div>
+
+          <div class="board-frame">
+            <div class="board" id="board" role="grid" aria-label="雷区" tabindex="0"></div>
+          </div>
+
+          <!--
+            状态栏刻意只放一行信息：它的最大内容宽度不能超过雷区宽度，
+            否则会把窗口撑宽、在雷区两侧留下大片灰色空隙。
+            「最佳成绩 / 成就」入口在「帮助」菜单中。
+          -->
+          <div class="statusbar">
+            <span class="statusbar__text" id="statusText">正在载入…</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="dialogs"></div>
+    <div class="toasts" id="toasts" aria-live="polite" aria-atomic="false"></div>
+
+    <script type="module" src="./main.js"></script>
+  </body>
+</html>

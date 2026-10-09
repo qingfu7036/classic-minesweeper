@@ -1,0 +1,127 @@
+/* ==========================================================================
+   menus.css — 菜单栏与下拉菜单（Win7 菜单视觉）
+   ========================================================================== */
+
+.menubar {
+  position: relative;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  gap: 0;
+  padding: 1px 2px;
+  background: linear-gradient(180deg, #fbfbfb 0%, #f2f2f2 60%, #ececec 100%);
+  border-bottom: 1px solid #dcdcdc;
+  user-select: none;
+}
+
+.menu {
+  position: relative;
+}
+
+.menu__button {
+  padding: 3px 10px;
+  border: 1px solid transparent;
+  border-radius: 2px;
+  background: transparent;
+  white-space: nowrap;
+}
+
+.menu__button:hover,
+.menu__button:focus-visible {
+  background: var(--accent-soft-2);
+  border-color: #b6d6ee;
+}
+
+.menu.is-open .menu__button {
+  background: var(--accent-soft);
+  border-color: #9fc7e8;
+}
+
+.menu__popup {
+  position: absolute;
+  top: calc(100% + 1px);
+  left: 0;
+  z-index: 60;
+  min-width: 200px;
+  padding: 3px;
+  background: #f8f8f8;
+  border: 1px solid #a6a6a6;
+  border-radius: 3px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.26), 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+.menu__popup[hidden] {
+  display: none;
+}
+
+.menu__item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  position: relative;
+  width: 100%;
+  padding: 4px 12px 4px 26px;
+  border: 1px solid transparent;
+  border-radius: 2px;
+  background: transparent;
+  text-align: left;
+}
+
+.menu__item:hover:not([disabled]),
+.menu__item.is-active {
+  background: var(--accent-soft-2);
+  border-color: #a8d0f0;
+}
+
+.menu__item[disabled] {
+  color: #a6a6a6;
+}
+
+.menu__item[aria-checked='true']::before {
+  content: '';
+  position: absolute;
+  left: 9px;
+  top: 50%;
+  width: 5px;
+  height: 9px;
+  margin-top: -6px;
+  border-right: 2px solid #1a5a8a;
+  border-bottom: 2px solid #1a5a8a;
+  transform: rotate(40deg);
+}
+
+.menu__item[aria-checked='true']::after {
+  content: '';
+  position: absolute;
+  left: 3px;
+  top: 3px;
+  right: 3px;
+  bottom: 3px;
+  border: 1px solid rgba(60, 127, 177, 0.25);
+  border-radius: 2px;
+  pointer-events: none;
+}
+
+.menu__item[aria-checked='true']::after {
+  display: none;
+}
+
+.menu__shortcut {
+  margin-left: auto;
+  padding-left: 26px;
+  color: #7b7b7b;
+  font-size: 11px;
+}
+
+.menu__separator {
+  height: 1px;
+  margin: 4px 8px;
+  background: #dedede;
+  border-bottom: 1px solid #ffffff;
+}
+
+.menu__label {
+  padding: 4px 12px 3px;
+  color: #7b7b7b;
+  font-size: 11px;
+}

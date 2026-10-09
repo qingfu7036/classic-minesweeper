@@ -1,0 +1,240 @@
+/* ==========================================================================
+   window.css — Aero 风格窗口外壳、标题栏、客户区、状态栏
+   ========================================================================== */
+
+.aero-window {
+  position: relative;
+  /* 整窗等比缩放：标题栏、菜单、LED、雷区、内边距会一起放大/缩小 */
+  zoom: var(--ui-scale);
+  flex: 0 0 auto;
+  /* 够宽时居中；比视口还宽时自动退化为左对齐，由桌面层滚动，雷区永远可达 */
+  margin: 0 auto;
+  width: max-content;
+  border-radius: var(--radius-window);
+  background: var(--aero-3);
+  box-shadow: var(--shadow-window);
+  border: 1px solid var(--aero-border);
+  /* 不裁剪内容：窗口很窄时下拉菜单必须能溢出显示，否则菜单项会被切掉、点不到 */
+  overflow: visible;
+}
+
+/* 玻璃高光：让标题栏有 Win7 Aero 的通透感 */
+.aero-window::after {
+  content: '';
+  position: absolute;
+  inset: 0 0 auto;
+  height: 30px;
+  border-radius: var(--radius-window) var(--radius-window) 0 0;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.55), rgba(255, 255, 255, 0));
+  pointer-events: none;
+}
+
+.titlebar {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  height: 30px;
+  padding: 0 3px 0 8px;
+  background: linear-gradient(180deg, var(--aero-1) 0%, var(--aero-2) 42%, var(--aero-3) 62%, var(--aero-4) 100%);
+  border-bottom: 1px solid var(--aero-border-dark);
+  user-select: none;
+  -webkit-app-region: drag;
+}
+
+.titlebar {
+  border-radius: var(--radius-window) var(--radius-window) 0 0;
+}
+
+.titlebar__left {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+}
+
+.titlebar__icon {
+  width: 16px;
+  height: 16px;
+  flex: 0 0 auto;
+  background: url('../assets/icons/mine.svg') center / 16px 16px no-repeat;
+  filter: drop-shadow(0 1px 0 rgba(255, 255, 255, 0.9));
+}
+
+.titlebar__title {
+  font-size: 12px;
+  color: var(--aero-title);
+  text-shadow: 0 0 3px rgba(255, 255, 255, 0.95), 0 0 7px rgba(255, 255, 255, 0.85);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.titlebar__buttons {
+  display: flex;
+  align-items: stretch;
+  gap: 1px;
+  height: 22px;
+  align-self: flex-start;
+  margin-top: 3px;
+  -webkit-app-region: no-drag;
+}
+
+.sysbtn {
+  position: relative;
+  width: 29px;
+  height: 22px;
+  border: 1px solid rgba(255, 255, 255, 0.75);
+  border-top: none;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.85) 0%, rgba(226, 238, 249, 0.75) 46%, rgba(197, 216, 236, 0.8) 100%);
+  transition: background var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.sysbtn:first-child {
+  border-radius: 0 0 0 3px;
+}
+
+.sysbtn:last-child {
+  border-radius: 0 0 3px 0;
+  width: 45px;
+}
+
+.sysbtn:hover {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.98) 0%, rgba(214, 235, 253, 0.95) 46%, rgba(168, 208, 242, 0.95) 100%);
+  box-shadow: inset 0 0 6px rgba(255, 255, 255, 0.9);
+}
+
+.sysbtn:active {
+  background: linear-gradient(180deg, rgba(186, 214, 240, 0.95) 0%, rgba(150, 190, 228, 0.95) 100%);
+}
+
+.sysbtn--close:hover {
+  border-color: #e59a92;
+  background: linear-gradient(180deg, #f5b6ae 0%, #e4584a 46%, #c02c1c 100%);
+}
+
+.sysbtn--close:active {
+  background: linear-gradient(180deg, #d9534a 0%, #a72316 100%);
+}
+
+.sysbtn__glyph {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 10px;
+  height: 10px;
+}
+
+/* 最小化：底部横杠 */
+.sysbtn--min .sysbtn__glyph::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: 1px;
+  width: 10px;
+  height: 2px;
+  background: #1a3c5c;
+}
+
+/* 最大化 / 还原：方框 */
+.sysbtn--max .sysbtn__glyph {
+  border: 1.4px solid #1a3c5c;
+  border-top-width: 2.4px;
+  border-radius: 1px;
+  background: transparent;
+}
+
+.aero-window.is-maximized .sysbtn--max .sysbtn__glyph {
+  border-top-width: 1.4px;
+  box-shadow: 2px -2px 0 -0.6px #e8f2fb, 2px -2px 0 0.8px #1a3c5c;
+}
+
+/* 关闭：X */
+.sysbtn--close .sysbtn__glyph::before,
+.sysbtn--close .sysbtn__glyph::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 12px;
+  height: 1.7px;
+  background: #1a3c5c;
+  border-radius: 1px;
+}
+
+.sysbtn--close .sysbtn__glyph::before {
+  transform: translate(-50%, -50%) rotate(45deg);
+}
+
+.sysbtn--close .sysbtn__glyph::after {
+  transform: translate(-50%, -50%) rotate(-45deg);
+}
+
+.sysbtn--close:hover .sysbtn__glyph::before,
+.sysbtn--close:hover .sysbtn__glyph::after {
+  background: #fff;
+}
+
+/* 网页版最大化：窗口铺满桌面区域（用 flex 拉伸，避免 zoom 下百分比宽度的不确定性） */
+.aero-window.is-maximized {
+  flex: 1 1 auto;
+  width: auto;
+  margin-inline: 0;
+  border-radius: 0;
+  border-left: none;
+  border-right: none;
+}
+
+.desktop--maximized {
+  padding: 0;
+  align-items: flex-start;
+}
+
+/* 最大化：控制区与状态栏铺满窗口宽度（经典窗口拉伸效果），雷区仍居中 */
+.aero-window.is-maximized .panel {
+  width: auto;
+  margin-inline: var(--client-gap);
+}
+
+.aero-window.is-maximized .statusbar {
+  width: auto;
+  margin-inline: 0;
+}
+
+/* ---- 客户区 ---- */
+.client {
+  position: relative;
+  z-index: 1;
+  background: var(--client);
+  border-top: 1px solid #ffffff;
+  padding: 0;
+  /* 窗口不再裁剪内容，底部圆角由客户区自己负责 */
+  border-radius: 0 0 var(--radius-window) var(--radius-window);
+}
+
+.statusbar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  /* 与控制区/雷区同宽并居中：状态栏不再把窗口撑宽，
+     否则初级棋盘两侧会被挤出大片灰色空隙（也是“放大缩小不等比例”的根源） */
+  width: calc(var(--cols, 9) * var(--cell) + var(--frame-pad) * 2 + var(--client-gap) * 2);
+  margin: 0 auto;
+  height: 22px;
+  padding: 0 6px;
+  background: linear-gradient(180deg, #f4f8fc 0%, #e6eef6 100%);
+  border-top: 1px solid var(--aero-border);
+  font-size: 11px;
+  color: #2a4a68;
+}
+
+.statusbar__text {
+  flex: 1 1 auto;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

@@ -1,0 +1,205 @@
+/* ==========================================================================
+   base.css — 设计变量、页面底色、通用元素
+   经典扫雷的可视风格全部由这里的变量驱动，改一处即可全局生效。
+   ========================================================================== */
+
+:root {
+  /* ---- 经典灰阶（与 Win7 扫雷一致的 3D 边框配色） ---- */
+  --gray: #c0c0c0;
+  --gray-light: #dfdfdf;
+  --gray-mid: #b6b6b6;
+  --gray-dark: #7b7b7b;
+  --gray-darker: #6a6a6a;
+  --bevel-hi: #ffffff;
+  --bevel-lo: #7b7b7b;
+  --bevel-lo-deep: #4f4f4f;
+
+  /* ---- 窗口（Aero 浅蓝） ---- */
+  --aero-1: #f2f8fe;
+  --aero-2: #dceafa;
+  --aero-3: #c6dcf4;
+  --aero-4: #b7d3f0;
+  --aero-border: #7ba2cc;
+  --aero-border-dark: #5d84ae;
+  --aero-title: #10304f;
+
+  /* ---- 客户区 ---- */
+  --surface: #f0f0f0;
+  --surface-alt: #f6f6f6;
+  --client: #c0c0c0;
+
+  /* ---- LED 计数器 ---- */
+  --led-on: #ff2b00;
+  --led-off: #3a0500;
+  --led-bg: #000000;
+
+  /* ---- 经典数字配色 ---- */
+  --num-1: #0000ff;
+  --num-2: #008000;
+  --num-3: #ff0000;
+  --num-4: #000080;
+  --num-5: #800000;
+  --num-6: #008080;
+  --num-7: #000000;
+  --num-8: #808080;
+
+  /* ---- 强调色（菜单高亮 / 按钮悬停） ---- */
+  --accent: #3c7fb1;
+  --accent-soft: #cce4f7;
+  --accent-soft-2: #e8f3fb;
+
+  /* ---- 尺寸 ----
+     注意：--cell / --led-* 都是「未缩放」的基础值。
+     整窗等比缩放由 .aero-window 的 zoom 实现，因此标题栏、菜单、LED、雷区、内边距
+     会一起等比变化，不会出现「只有格子变大、边框还留缝」的情况。 */
+  --ui-scale: 1;
+  --cell: 16px;
+  --led-w: 12px;
+  --led-h: 21px;
+  --led-t: 2.4px;
+  --frame-pad: 3px;
+  --client-gap: 6px;
+  --radius-window: 7px;
+  --radius-ctl: 3px;
+
+  --font-ui: 'Segoe UI', Tahoma, 'Microsoft YaHei', '微软雅黑', sans-serif;
+  --font-board: Tahoma, 'Segoe UI', 'Microsoft YaHei', sans-serif;
+
+  --shadow-window: 0 14px 40px rgba(6, 26, 48, 0.45), 0 3px 10px rgba(6, 26, 48, 0.35);
+  --transition-fast: 90ms ease-out;
+  --transition-mid: 160ms ease-out;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  min-height: 100%;
+}
+
+body {
+  font-family: var(--font-ui);
+  font-size: 12px;
+  color: #1b1b1b;
+  /* 近似 Win7 默认桌面：浅蓝到深蓝的柔和过渡 */
+  background:
+    radial-gradient(1100px 520px at 50% -12%, rgba(255, 255, 255, 0.42), rgba(255, 255, 255, 0) 62%),
+    radial-gradient(900px 500px at 88% 108%, rgba(11, 44, 74, 0.55), rgba(11, 44, 74, 0) 70%),
+    linear-gradient(168deg, #08355a 0%, #10537f 26%, #2b8ab8 52%, #79c0e4 76%, #c3e7f8 100%);
+  background-attachment: fixed;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+button,
+input,
+select,
+textarea {
+  font-family: inherit;
+  font-size: inherit;
+  color: inherit;
+}
+
+button {
+  cursor: default;
+}
+
+:focus-visible {
+  outline: 2px solid #ffb300;
+  outline-offset: 1px;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* 减少动画：设置项或系统偏好任一命中即生效 */
+body.reduced-motion *,
+body.reduced-motion *::before,
+body.reduced-motion *::after {
+  animation-duration: 1ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 1ms !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 1ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 1ms !important;
+  }
+}
+
+/* 桌面容器：窗口比视口窄时居中；比视口宽时退化为左对齐并可滚动（雷区永远可达） */
+/* 桌面版（Electron）：窗口本身就是应用窗口，不要桌面留白，否则窗口会比内容大一圈 */
+body.is-desktop .desktop {
+  padding: 0;
+  overflow: auto;
+}
+
+.desktop {
+  min-height: 100vh;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+  padding: clamp(10px, 3vh, 34px) clamp(8px, 2vw, 28px) clamp(24px, 6vh, 60px);
+  overflow: auto;
+}
+
+.desktop--top {
+  align-items: flex-start;
+}
+
+/* 通用 Win7 按钮 */
+.btn {
+  min-width: 76px;
+  padding: 4px 12px;
+  border: 1px solid #9a9a9a;
+  border-radius: var(--radius-ctl);
+  background: linear-gradient(180deg, #fbfbfb 0%, #f0f0f0 45%, #e4e4e4 100%);
+  box-shadow: inset 0 1px 0 #fff, 0 1px 2px rgba(0, 0, 0, 0.08);
+  transition: background var(--transition-fast), border-color var(--transition-fast);
+}
+
+.btn:hover {
+  border-color: #3c9be0;
+  background: linear-gradient(180deg, #eaf6fe 0%, #d4ecfb 48%, #bde1f7 100%);
+}
+
+.btn:active {
+  background: linear-gradient(180deg, #c1e0f4 0%, #a9d3ef 100%);
+  box-shadow: inset 0 2px 3px rgba(0, 0, 0, 0.14);
+}
+
+.btn--primary {
+  border-color: #2c7bb8;
+  background: linear-gradient(180deg, #e9f6fe 0%, #cbe7fa 48%, #a8d4f2 100%);
+  font-weight: 600;
+}
+
+.btn--primary:hover {
+  background: linear-gradient(180deg, #dcf0fd 0%, #b6dcf7 48%, #8fc8ef 100%);
+}
+
+.btn:disabled {
+  color: #9a9a9a;
+  border-color: #c4c4c4;
+  background: #f2f2f2;
+  box-shadow: none;
+}

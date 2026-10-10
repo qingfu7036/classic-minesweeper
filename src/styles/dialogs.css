@@ -19,10 +19,9 @@
 }
 
 .dialog {
-  width: min(460px, 100%);
-  max-height: calc(100vh - 48px);
-  /* 跟随界面缩放，避免窗口放大后对话框显得过小 */
-  zoom: var(--ui-scale);
+  /* 弹窗属于系统级 UI，不跟随棋盘缩放：始终按屏幕尺寸适配，避免缩放/最大化时“堵出屏幕” */
+  width: min(460px, calc(100vw - 32px));
+  max-height: calc(100vh - 32px);
   display: flex;
   flex-direction: column;
   border: 1px solid var(--aero-border);
@@ -34,7 +33,7 @@
 }
 
 .dialog--wide {
-  width: min(560px, 100%);
+  width: min(560px, calc(100vw - 32px));
 }
 
 @keyframes dialog-in {
@@ -110,9 +109,13 @@
   padding: 14px 16px;
   overflow: auto;
   line-height: 1.6;
+  /* 内容过高时由内容区内部滚动，标题栏与底部按钮始终留在屏幕内 */
+  flex: 1 1 auto;
+  min-height: 0;
 }
 
 .dialog__footer {
+  flex: 0 0 auto;
   display: flex;
   justify-content: flex-end;
   gap: 8px;
@@ -307,8 +310,7 @@
 }
 
 .toast {
-  /* 与窗口使用同一缩放比例 */
-  zoom: var(--ui-scale);
+  /* 提示浮层同样不跟随棋盘缩放，否则最大化时会被放大到遮满屏幕 */
   display: flex;
   align-items: center;
   gap: 10px;

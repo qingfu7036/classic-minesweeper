@@ -40,7 +40,7 @@ import { createNotifier } from './ui/notifications.js';
 import { createInputController } from './ui/inputController.js';
 import { formatDuration, formatElapsedSeconds } from './utils/formatTime.js';
 
-const APP_VERSION = '1.0.0';
+const APP_VERSION = '1.0.1';
 /** 本地自生成音效（scripts/generate-sounds.mjs 生成）。 */
 const SOUND_URLS = {
   reveal: new URL('./assets/sounds/reveal.wav', import.meta.url).href,

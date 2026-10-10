@@ -331,6 +331,49 @@ test.describe('Windows 7 经典扫雷 · 浏览器冒烟', () => {
     await page.keyboard.press('Escape');
   });
 
+  test('成绩 / 规则 / 成就弹窗在各种缩放与最大化下都适配屏幕', async ({ page }) => {
+    await page.setViewportSize({ width: 1280, height: 800 });
+    const viewport = page.viewportSize();
+
+    const openDialog = async (itemId) => {
+      await page.locator('[data-menu="help"] .menu__button').click();
+      await page.locator(`[data-item="${itemId}"]`).click();
+      const dialog = page.locator('.overlay .dialog');
+      const box = await dialog.boundingBox();
+      const footerVisible = await page.locator('.dialog__footer .btn').first().isVisible();
+      await page.keyboard.press('Escape');
+      return { box, footerVisible };
+    };
+
+    const assertFits = (label, { box, footerVisible }) => {
+      expect(box, `${label} 弹窗应存在`).toBeTruthy();
+      expect(box.x, `${label} 左边越界`).toBeGreaterThanOrEqual(-1);
+      expect(box.y, `${label} 顶部越界`).toBeGreaterThanOrEqual(-1);
+      expect(box.x + box.width, `${label} 右边越界`).toBeLessThanOrEqual(viewport.width + 1);
+      expect(box.y + box.height, `${label} 底部越界`).toBeLessThanOrEqual(viewport.height + 1);
+      expect(footerVisible, `${label} 底部按钮不可见`).toBe(true);
+    };
+
+    const panels = ['help.records', 'help.rules', 'help.achievements'];
+
+    for (const itemId of panels) {
+      assertFits(`100% / ${itemId}`, await openDialog(itemId));
+    }
+
+    await page.locator('[data-menu="settings"] .menu__button').click();
+    await page.locator('[data-item="setting.scale.1.5"]').click();
+    for (const itemId of panels) {
+      assertFits(`150% / ${itemId}`, await openDialog(itemId));
+    }
+
+    // 最大化时整窗缩放系数会被拉到最大，弹窗最容易“炸出屏幕”
+    await page.locator('#btnMaximize').click();
+    await expect(page.locator('#gameWindow')).toHaveClass(/is-maximized/);
+    for (const itemId of panels) {
+      assertFits(`最大化 / ${itemId}`, await openDialog(itemId));
+    }
+  });
+
   test('设置项可切换且刷新后保留（音效 / 减少动画）', async ({ page }) => {
     await page.locator('[data-menu="settings"] .menu__button').click();
     await page.locator('[data-item="setting.reducedMotion"]').click();

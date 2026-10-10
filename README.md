@@ -203,7 +203,7 @@ npm run test:e2e               # Playwright：真实 Chromium 冒烟测试
 **实际运行结果（本机 Windows + Node v24.19.0）：**
 
 - `npm test` → **16 个文件 / 231 个用例全部通过**
-- `npm run test:e2e` → **11 个真实浏览器用例全部通过**（含 40×60 超大棋盘在 320px 窗口下的可达性验证）
+- `npm run test:e2e` → **14 个真实浏览器用例全部通过**（含等比缩放、最大化铺满、弹窗适配屏幕、40×60 超大棋盘可达性）
 
 > 首次运行 e2e 需要下载浏览器内核：`npx playwright install chromium`。若网络受限，
 > 可改用系统已装 Chrome：在 `playwright.config.js` 中设置 `channel: 'chrome'`。
@@ -284,15 +284,15 @@ CLASSIC_MINESWEEPER_SMOKE=1 npx electron .
 
 | 文件 | 大小 | 说明 |
 | --- | --- | --- |
-| `release\ClassicMinesweeper-1.0.0-portable.exe` | 96 MB | 便携版，双击即玩，无需安装 |
-| `release\ClassicMinesweeper-1.0.0-setup.exe` | 96 MB | NSIS 安装包（可选安装目录） |
+| `release\ClassicMinesweeper-1.0.1-portable.exe` | 96 MB | 便携版，双击即玩，无需安装 |
+| `release\ClassicMinesweeper-1.0.1-setup.exe` | 96 MB | NSIS 安装包（可选安装目录） |
 | `release\win-unpacked\Classic Minesweeper.exe` | — | 免安装目录版（含 resources/app.asar） |
 
 ### 实际执行的验证
 
 ```text
 npm test                                   → 16 个文件 / 231 个用例全部通过
-npm run test:e2e                           → 13 个真实 Chromium 用例全部通过（含等比缩放、无空隙、最大化铺满断言）
+npm run test:e2e                           → 14 个真实 Chromium 用例全部通过（等比缩放 / 无空隙 / 最大化铺满 / 弹窗适配屏幕）
 npm run build                              → dist/ 生成成功（相对路径，可离线运行）
 CLASSIC_MINESWEEPER_SMOKE=1 npx electron .  → EXIT=0
    [smoke] {"cells":81,"isolation":true,"desktopApi":true,"windowWidth":171,"contentWidth":172,
@@ -301,7 +301,7 @@ CLASSIC_MINESWEEPER_SMOKE=1 npx electron .  → EXIT=0
    — fitsContent / layoutOk 防住「窗口比棋盘大一圈、到处是大片空隙」；
      maximize.* 防住「最大化后仍然没铺满屏幕」（格子 16→51px，竖直铺满 99%，控制区铺满 97.8%）。
 "release\win-unpacked\Classic Minesweeper.exe"（同样带自检）→ EXIT=0
-"release\ClassicMinesweeper-1.0.0-portable.exe" → 实测拉起 4 个 Classic Minesweeper.exe 进程（主进程+渲染+GPU），随后已清理
+"release\ClassicMinesweeper-1.0.1-portable.exe" → 实测拉起 4 个 Classic Minesweeper.exe 进程（主进程+渲染+GPU），随后已清理
 ```
 
 ### 仍需人工确认的事项
@@ -310,3 +310,12 @@ CLASSIC_MINESWEEPER_SMOKE=1 npx electron .  → EXIT=0
   如果确实需要在 Windows 7 上运行，需把 Electron 降到仍支持 Win7 的旧版本（如 22.x）并重新验证。
 - 安装包未做代码签名，SmartScreen 会提示未知发布者。
 - 未在 macOS / Linux 上验证打包流程（配置已保留跨平台目标，可自行扩展）。
+
+---
+
+## 13. 版本记录
+
+| 版本 | 变更 |
+| --- | --- |
+| **v1.0.1** | 修复：成绩 / 规则 / 成就等弹窗在 150% 显示缩放或最大化时会被整窗缩放系数放大，导致顶部越界、底部按钮点不到。现在弹窗不跟随棋盘缩放，改为按视口自适应尺寸（`min(460px, 100vw-32px)` / `max-height: 100vh-32px`），内容过高时由内容区内部滚动，标题栏与底部按钮始终留在屏幕内；提示浮层同样不再跟随缩放。新增 1 条浏览器端回归断言，覆盖 100% / 150% / 最大化三种情形。 |
+| v1.0.0 | 首个版本：完整经典规则（延迟布雷、首点安全区、迭代展开、快速开格、终局锁定）、Win7 风格界面（Aero 窗口 / 七段 LED / 笑脸 / 本地 SVG 图标）、自生成音效、最佳成绩与统计、自定义难度、9 个成就、完整键盘与鼠标操作、Electron 桌面版与 Windows 打包。 |

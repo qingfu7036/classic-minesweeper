@@ -1,7 +1,7 @@
 {
   "name": "classic-minesweeper",
   "productName": "Classic Minesweeper",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "private": true,
   "description": "Windows 7 Classic Minesweeper — Vite + vanilla ES modules web build with an Electron desktop target",
   "type": "module",
